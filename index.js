@@ -51,6 +51,25 @@ async function run() {
 
             res.send({ status: true, data: result });
         });
+
+        // set User verify status
+        app.patch("/verifyStatus/:email", async (req, res) => {
+            const email = req.params.email;
+            const isVerified = req.body;
+            const filter = { email: email };
+
+            const options = { upsert: false };
+            const doc = {
+                $set: { isVerified: isVerified.isVerified },
+            };
+            const result = await usersCollection.updateOne(
+                filter,
+                doc,
+                options
+            );
+
+            res.send({ result });
+        });
     } finally {
     }
 }
