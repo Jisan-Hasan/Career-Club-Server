@@ -25,35 +25,55 @@ async function run() {
     try {
         // all collection
         const usersCollection = client.db("career-club").collection("users");
-        const packageCollection = client.db("career-club").collection("packages");
+        const packageCollection = client
+            .db("career-club")
+            .collection("packages");
 
+        /* ----------------------GET API----------------------------- */
         // get user role
-        app.get('/userRole/:email', async(req, res) => {
+        app.get("/userRole/:email", async (req, res) => {
             const email = req.params.email;
-            const filter = {email: email};
+            const filter = { email: email };
             const result = await usersCollection.findOne(filter);
-            res.send({status: true, data: result?.role});
-        })
+            res.send({ status: true, data: result?.role });
+        });
+
+        // get all packages
+        app.get("/package", async (req, res) => {
+            const filter = {};
+            const result = await packageCollection.find(filter).toArray();
+            res.send({ status: true, data: result });
+        });
+
+        /* ----------------------POST API----------------------------- */
+
+        // post package
+        app.post("/package", async (req, res) => {
+            const package = req.body;
+            const result = await packageCollection.insertOne(package);
+            res.send({ status: true, data: result });
+        });
+
+        /* ----------------------PUT API----------------------------- */
 
         // save user in the db
         app.put("/user/:email", async (req, res) => {
             const email = req.params.email;
             const user = req.body;
-            const filter = {email: email};
-            const options = {upsert: true};
+            const filter = { email: email };
+            const options = { upsert: true };
             const doc = {
                 $set: user,
             };
-            const result = await usersCollection.updateOne(filter, doc, options);
+            const result = await usersCollection.updateOne(
+                filter,
+                doc,
+                options
+            );
             res.send({ status: true, data: result });
         });
 
-        // post package
-        app.post('/package', async(req, res) => {
-            const package = req.body;
-            const result = await packageCollection.insertOne(package);
-            res.send({status: true, data: result});
-        })
+        /* ----------------------PATCH API----------------------------- */
 
         // set User role
         app.patch("/userRole/:email", async (req, res) => {
@@ -92,8 +112,6 @@ async function run() {
 
             res.send({ result });
         });
-
-        
     } finally {
     }
 }
