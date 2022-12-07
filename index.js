@@ -27,10 +27,24 @@ async function run() {
         const usersCollection = client.db("career-club").collection("users");
         const packageCollection = client.db("career-club").collection("packages");
 
+        // get user role
+        app.get('/userRole/:email', async(req, res) => {
+            const email = req.params.email;
+            const filter = {email: email};
+            const result = await usersCollection.findOne(filter);
+            res.send({status: true, data: result?.role});
+        })
+
         // save user in the db
-        app.post("/user", async (req, res) => {
+        app.put("/user/:email", async (req, res) => {
+            const email = req.params.email;
             const user = req.body;
-            const result = await usersCollection.insertOne(user);
+            const filter = {email: email};
+            const options = {upsert: true};
+            const doc = {
+                $set: user,
+            };
+            const result = await usersCollection.updateOne(filter, doc, options);
             res.send({ status: true, data: result });
         });
 
