@@ -25,6 +25,7 @@ async function run() {
     try {
         // all collection
         const usersCollection = client.db("career-club").collection("users");
+        const packageCollection = client.db("career-club").collection("packages");
 
         // save user in the db
         app.post("/user", async (req, res) => {
@@ -32,6 +33,13 @@ async function run() {
             const result = await usersCollection.insertOne(user);
             res.send({ status: true, data: result });
         });
+
+        // post package
+        app.post('/package', async(req, res) => {
+            const package = req.body;
+            const result = await packageCollection.insertOne(package);
+            res.send({status: true, data: result});
+        })
 
         // set User role
         app.patch("/userRole/:email", async (req, res) => {
@@ -70,6 +78,8 @@ async function run() {
 
             res.send({ result });
         });
+
+        
     } finally {
     }
 }
