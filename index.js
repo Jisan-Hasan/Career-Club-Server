@@ -28,6 +28,9 @@ async function run() {
         const packageCollection = client
             .db("career-club")
             .collection("packages");
+        const categoryCollection = client
+            .db("career-club")
+            .collection("categories");
 
         /* ----------------------GET API----------------------------- */
         // get user role
@@ -51,6 +54,13 @@ async function run() {
         app.post("/package", async (req, res) => {
             const package = req.body;
             const result = await packageCollection.insertOne(package);
+            res.send({ status: true, data: result });
+        });
+
+        // post category
+        app.post("/category", async (req, res) => {
+            const category = req.body;
+            const result = await categoryCollection.insertOne(category);
             res.send({ status: true, data: result });
         });
 
