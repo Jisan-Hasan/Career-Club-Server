@@ -48,6 +48,13 @@ async function run() {
             res.send({ status: true, data: result });
         });
 
+        // get all categories
+        app.get("/category", async (req, res) => {
+            const filter = {};
+            const result = await categoryCollection.find(filter).toArray();
+            res.send({ status: true, data: result });
+        });
+
         /* ----------------------POST API----------------------------- */
 
         // post package
