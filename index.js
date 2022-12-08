@@ -1,4 +1,4 @@
-const { MongoClient, ServerApiVersion } = require("mongodb");
+const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 const express = require("express");
 const cors = require("cors");
 const jwt = require("jsonwebtoken");
@@ -45,6 +45,14 @@ async function run() {
         app.get("/package", async (req, res) => {
             const filter = {};
             const result = await packageCollection.find(filter).toArray();
+            res.send({ status: true, data: result });
+        });
+
+        // get package by id
+        app.get("/package/:id", async (req, res) => {
+            const id = req.params.id;
+            const filter = { _id: ObjectId(id) };
+            const result = await packageCollection.findOne(filter);
             res.send({ status: true, data: result });
         });
 
