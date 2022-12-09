@@ -150,20 +150,30 @@ async function run() {
         app.patch("/package/:id", async (req, res) => {
             const id = req.params.id;
             const updatedPackage = req.body;
-            console.log(id, updatedPackage);
             const filter = { _id: ObjectId(id) };
             const options = { upsert: false };
             const doc = {
                 $set: updatedPackage,
             };
 
-            const result = await packageCollection.updateMany(
+            const result = await packageCollection.updateOne(
                 filter,
                 doc,
                 options
             );
             res.send({ status: true, data: result });
         });
+
+        // update category details
+        app.patch('/category/:id', async(req, res)=> {
+            const id = req.params.id;
+            const updatedCategory = req.body;
+            const filter = {_id: ObjectId(id)};
+            const options = {upsert: false};
+            const doc = {$set: updatedCategory};
+            const result = await categoryCollection.updateOne(filter, doc, options);
+            res.send({status: true, data: result});
+        })
 
         /* ----------------------DELETE API----------------------------- */
 
