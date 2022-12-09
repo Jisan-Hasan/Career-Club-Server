@@ -156,6 +156,20 @@ async function run() {
             );
             res.send({ status: true, data: result });
         });
+
+        /* ----------------------DELETE API----------------------------- */
+
+        // delete package api
+        app.delete("/package/:id", async (req, res) => {
+            const id = req.params.id;
+            const filter = { _id: ObjectId(id) };
+            const result = await packageCollection.deleteOne(filter);
+            if (result.deletedCount === 1) {
+                res.send({ status: true });
+            } else {
+                res.send({ status: false });
+            }
+        });
     } finally {
     }
 }
