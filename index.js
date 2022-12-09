@@ -137,6 +137,25 @@ async function run() {
 
             res.send({ result });
         });
+
+        // update package details
+        app.patch("/package/:id", async (req, res) => {
+            const id = req.params.id;
+            const updatedPackage = req.body;
+            console.log(id, updatedPackage);
+            const filter = { _id: ObjectId(id) };
+            const options = { upsert: false };
+            const doc = {
+                $set: updatedPackage,
+            };
+
+            const result = await packageCollection.updateMany(
+                filter,
+                doc,
+                options
+            );
+            res.send({ status: true, data: result });
+        });
     } finally {
     }
 }
