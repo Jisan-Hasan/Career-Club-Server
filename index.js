@@ -165,23 +165,39 @@ async function run() {
         });
 
         // update category details
-        app.patch('/category/:id', async(req, res)=> {
+        app.patch("/category/:id", async (req, res) => {
             const id = req.params.id;
             const updatedCategory = req.body;
-            const filter = {_id: ObjectId(id)};
-            const options = {upsert: false};
-            const doc = {$set: updatedCategory};
-            const result = await categoryCollection.updateOne(filter, doc, options);
-            res.send({status: true, data: result});
-        })
+            const filter = { _id: ObjectId(id) };
+            const options = { upsert: false };
+            const doc = { $set: updatedCategory };
+            const result = await categoryCollection.updateOne(
+                filter,
+                doc,
+                options
+            );
+            res.send({ status: true, data: result });
+        });
 
         /* ----------------------DELETE API----------------------------- */
 
-        // delete package api
+        // delete package by id
         app.delete("/package/:id", async (req, res) => {
             const id = req.params.id;
             const filter = { _id: ObjectId(id) };
             const result = await packageCollection.deleteOne(filter);
+            if (result.deletedCount === 1) {
+                res.send({ status: true });
+            } else {
+                res.send({ status: false });
+            }
+        });
+
+        // delete category by id
+        app.delete("/category/:id", async (req, res) => {
+            const id = req.params.id;
+            const filter = { _id: ObjectId(id) };
+            const result = await categoryCollection.deleteOne(filter);
             if (result.deletedCount === 1) {
                 res.send({ status: true });
             } else {
