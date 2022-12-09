@@ -63,6 +63,14 @@ async function run() {
             res.send({ status: true, data: result });
         });
 
+        // get category by id
+        app.get("/category/:id", async (req, res) => {
+            const id = req.params.id;
+            const filter = { _id: ObjectId(id) };
+            const result = await categoryCollection.findOne(filter);
+            res.send({ status: true, data: result });
+        });
+
         /* ----------------------POST API----------------------------- */
 
         // post package
