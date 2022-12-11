@@ -32,6 +32,9 @@ async function run() {
         const categoryCollection = client
             .db("career-club")
             .collection("categories");
+        const paymentCollection = client
+            .db("career-club")
+            .collection("payments");
 
         /* ----------------------GET API----------------------------- */
         // get user role
@@ -102,6 +105,13 @@ async function run() {
         app.post("/category", async (req, res) => {
             const category = req.body;
             const result = await categoryCollection.insertOne(category);
+            res.send({ status: true, data: result });
+        });
+
+        // save payment info on db
+        app.post("/payment", async (req, res) => {
+            const payment = req.body;
+            const result = await paymentCollection.insertOne(payment);
             res.send({ status: true, data: result });
         });
 
