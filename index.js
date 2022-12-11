@@ -75,6 +75,14 @@ async function run() {
             res.send({ status: true, data: result });
         });
 
+        // get users current package number
+        app.get("/postNumber/:email", async (req, res) => {
+            const email = req.params.email;
+            const filter = { email: email };
+            const result = await usersCollection.findOne(filter);
+            res.send({ postNumber: result.postNumber });
+        });
+
         /* ----------------------POST API----------------------------- */
 
         // stripe payment
@@ -171,6 +179,23 @@ async function run() {
                 options
             );
 
+            res.send({ result });
+        });
+
+        // update employer post package number
+        app.patch("/postNumber/:email", async (req, res) => {
+            const email = req.params.email;
+            const postNumber = req.body;
+            const filter = { email: email };
+            const options = { upsert: false };
+            const doc = {
+                $set: { postNumber: postNumber.postNumber },
+            };
+            const result = await usersCollection.updateOne(
+                filter,
+                doc,
+                options
+            );
             res.send({ result });
         });
 
