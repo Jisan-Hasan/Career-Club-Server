@@ -83,6 +83,14 @@ async function run() {
             res.send({ postNumber: result.postNumber });
         });
 
+        // get payments info for particular employer
+        app.get('/payments/:email', async(req, res)=> {
+            const email = req.params.email;
+            const filter = {email: email};
+            const result = await paymentCollection.find(filter).toArray();
+            res.send({status: true, data: result});
+        })
+
         /* ----------------------POST API----------------------------- */
 
         // stripe payment
@@ -186,6 +194,7 @@ async function run() {
         app.patch("/postNumber/:email", async (req, res) => {
             const email = req.params.email;
             const postNumber = req.body;
+            // console.log(postNumber);
             const filter = { email: email };
             const options = { upsert: false };
             const doc = {
