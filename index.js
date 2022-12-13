@@ -35,6 +35,7 @@ async function run() {
         const paymentCollection = client
             .db("career-club")
             .collection("payments");
+        const jobCollection = client.db("career-club").collection("jobs");
 
         /* ----------------------GET API----------------------------- */
         // get user role
@@ -84,12 +85,12 @@ async function run() {
         });
 
         // get payments info for particular employer
-        app.get('/payments/:email', async(req, res)=> {
+        app.get("/payments/:email", async (req, res) => {
             const email = req.params.email;
-            const filter = {email: email};
+            const filter = { email: email };
             const result = await paymentCollection.find(filter).toArray();
-            res.send({status: true, data: result});
-        })
+            res.send({ status: true, data: result });
+        });
 
         /* ----------------------POST API----------------------------- */
 
@@ -128,6 +129,13 @@ async function run() {
         app.post("/payment", async (req, res) => {
             const payment = req.body;
             const result = await paymentCollection.insertOne(payment);
+            res.send({ status: true, data: result });
+        });
+
+        // save job post info on db
+        app.post("/jobs", async (req, res) => {
+            const job = req.body;
+            const result = await jobCollection.insertOne(job);
             res.send({ status: true, data: result });
         });
 
