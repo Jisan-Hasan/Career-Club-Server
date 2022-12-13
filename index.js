@@ -92,6 +92,14 @@ async function run() {
             res.send({ status: true, data: result });
         });
 
+        // get employer job post by email
+        app.get("/jobPost/:email", async (req, res) => {
+            const email = req.params.email;
+            const filter = { employer_email: email };
+            const result = await jobCollection.find(filter).toArray();
+            res.send({ status: true, data: result });
+        });
+
         /* ----------------------POST API----------------------------- */
 
         // stripe payment
