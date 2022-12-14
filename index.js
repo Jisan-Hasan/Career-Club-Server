@@ -293,6 +293,21 @@ async function run() {
             }
         });
 
+        // update job post verified status
+        app.patch("/jobStatus/:id", async (req, res) => {
+            const id = req.params.id;
+            const status = req.body;
+            const filter = { _id: ObjectId(id) };
+            const options = { upsert: false };
+            const doc = { $set: { isApproved: status.status } };
+            const result = await jobCollection.updateOne(filter, doc, options);
+            if (result.matchedCount) {
+                res.send({ status: true });
+            } else {
+                res.send({ status: false });
+            }
+        });
+
         /* ----------------------DELETE API----------------------------- */
 
         // delete package by id
