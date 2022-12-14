@@ -299,7 +299,19 @@ async function run() {
             const id = req.params.id;
             const filter = { _id: ObjectId(id) };
             const result = await categoryCollection.deleteOne(filter);
-            if (result.deletedCount === 1) {
+            if (result.deletedCount) {
+                res.send({ status: true });
+            } else {
+                res.send({ status: false });
+            }
+        });
+
+        // delete job by id
+        app.delete("/job/:id", async (req, res) => {
+            const id = req.params.id;
+            const filter = { _id: ObjectId(id) };
+            const result = await jobCollection.deleteOne(filter);
+            if (result.deletedCount) {
                 res.send({ status: true });
             } else {
                 res.send({ status: false });
