@@ -100,6 +100,14 @@ async function run() {
             res.send({ status: true, data: result });
         });
 
+        // get particular job by id
+        app.get('/job/:id', async(req, res)=> {
+            const id = req.params.id;
+            const filter = {_id: ObjectId(id)};
+            const result = await jobCollection.findOne(filter);
+            res.send({status: true, data: result});
+        })
+
         /* ----------------------POST API----------------------------- */
 
         // stripe payment
