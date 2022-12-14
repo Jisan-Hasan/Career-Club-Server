@@ -101,12 +101,12 @@ async function run() {
         });
 
         // get particular job by id
-        app.get('/job/:id', async(req, res)=> {
+        app.get("/job/:id", async (req, res) => {
             const id = req.params.id;
-            const filter = {_id: ObjectId(id)};
+            const filter = { _id: ObjectId(id) };
             const result = await jobCollection.findOne(filter);
-            res.send({status: true, data: result});
-        })
+            res.send({ status: true, data: result });
+        });
 
         /* ----------------------POST API----------------------------- */
 
@@ -263,6 +263,21 @@ async function run() {
                 options
             );
             res.send({ status: true, data: result });
+        });
+
+        // update posted job
+        app.patch("/job/:id", async (req, res) => {
+            const id = req.params.id;
+            const updatedJob = req.body;
+            const filter = { _id: ObjectId(id) };
+            const options = { upsert: false };
+            const doc = { $set: updatedJob };
+            const result = await jobCollection.updateOne(filter, doc, options);
+            if (result.matchedCount) {
+                res.send({ status: true });
+            } else {
+                res.send({ status: false });
+            }
         });
 
         /* ----------------------DELETE API----------------------------- */
