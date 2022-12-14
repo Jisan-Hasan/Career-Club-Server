@@ -108,6 +108,19 @@ async function run() {
             res.send({ status: true, data: result });
         });
 
+        // get jobs by their type
+        app.get("/jobs/:type", async (req, res) => {
+            const type = req.params.type;
+            let filter = {};
+            if (type == "approved") {
+                filter = { isApproved: true };
+            } else if (type == "disapproved") {
+                filter = { isApproved: false };
+            }
+            const result = await jobCollection.find(filter).toArray();
+            res.send({ status: true, data: result });
+        });
+
         /* ----------------------POST API----------------------------- */
 
         // stripe payment
