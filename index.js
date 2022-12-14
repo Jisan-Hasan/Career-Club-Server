@@ -84,6 +84,12 @@ async function run() {
             res.send({ postNumber: result.postNumber });
         });
 
+        // get all payment history
+        app.get('/payments', async(req, res)=> {
+            const result = await paymentCollection.find({}).toArray();
+            res.send({status: true, data: result});
+        })
+
         // get payments info for particular employer
         app.get("/payments/:email", async (req, res) => {
             const email = req.params.email;
