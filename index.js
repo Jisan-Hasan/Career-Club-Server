@@ -85,10 +85,10 @@ async function run() {
         });
 
         // get all payment history
-        app.get('/payments', async(req, res)=> {
+        app.get("/payments", async (req, res) => {
             const result = await paymentCollection.find({}).toArray();
-            res.send({status: true, data: result});
-        })
+            res.send({ status: true, data: result });
+        });
 
         // get payments info for particular employer
         app.get("/payments/:email", async (req, res) => {
@@ -124,6 +124,55 @@ async function run() {
                 filter = { isApproved: false };
             }
             const result = await jobCollection.find(filter).toArray();
+            res.send({ status: true, data: result });
+        });
+
+        // get jobs based on filtered value or search string
+        app.get("/jobs", async (req, res) => {
+            const category = req.query.category;
+            const experience = req.query.experience;
+            const type = req.query.type;
+            const duration = req.query.duration;
+            const searchStr = req.query.searchStr;
+            
+            let filter = { isApproved: true };
+            if (category !== "all") {
+                filter.category_id = category;
+            }
+            if (experience !== "all") {
+                filter.experience = experience;
+            }
+            if (type !== "all") {
+                filter.type = type;
+            }
+            if (duration !== "all") {
+                filter.duration = duration;
+            }
+            if (
+                category === "all" &&
+                experience === "all" &&
+                type === "all" &&
+                duration === "all" &&
+                searchStr === ""
+            ) {
+                filter = { isApproved: true };
+            }
+            const result = await jobCollection.find(filter).toArray();
+
+            if (searchStr !== "") {
+                searchResult = result.filter((job) => {
+                    if(job.title
+                        .toLocaleLowerCase()
+                        .includes(searchStr.toLocaleLowerCase()) ||
+                        job.category_title
+                            .toLocaleLowerCase()
+                            .includes(searchStr.toLocaleLowerCase())){
+                                return job;
+                            }
+                });
+                res.send({ status: true, data: searchResult });
+                return;
+            }
             res.send({ status: true, data: result });
         });
 
