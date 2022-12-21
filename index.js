@@ -274,6 +274,25 @@ async function run() {
             res.send({ status: true, data: result });
         });
 
+        // save user image url
+        app.patch("/image/:email", async (req, res) => {
+            const email = req.params.email;
+            const image = req.body;
+            const filter = { email: email };
+
+            const options = { upsert: false };
+            const doc = {
+                $set: { image: image.image },
+            };
+            const result = await usersCollection.updateOne(
+                filter,
+                doc,
+                options
+            );
+
+            res.send({ status: true, data: result });
+        });
+
         // set User verify status
         app.patch("/verifyStatus/:email", async (req, res) => {
             const email = req.params.email;
