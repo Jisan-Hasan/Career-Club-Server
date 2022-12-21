@@ -393,6 +393,25 @@ async function run() {
             }
         });
 
+        // update user profile information
+        app.patch("/updateProfile/:id", async (req, res) => {
+            const id = req.params.id;
+            const updatedProfile = req.body;
+            const filter = { _id: ObjectId(id) };
+            const options = { upsert: false };
+            const doc = { $set: updatedProfile };
+            const result = await usersCollection.updateOne(
+                filter,
+                doc,
+                options
+            );
+            if (result.matchedCount) {
+                res.send({ status: true });
+            } else {
+                res.send({ status: false });
+            }
+        });
+
         /* ----------------------DELETE API----------------------------- */
 
         // delete package by id
