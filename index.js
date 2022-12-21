@@ -38,6 +38,15 @@ async function run() {
         const jobCollection = client.db("career-club").collection("jobs");
 
         /* ----------------------GET API----------------------------- */
+
+        // get user by email
+        app.get("/user/:email", async (req, res) => {
+            const email = req.params.email;
+            const filter = { email: email };
+            const result = await usersCollection.findOne(filter);
+            res.send({ status: true, data: result });
+        });
+
         // get user role
         app.get("/userRole/:email", async (req, res) => {
             const email = req.params.email;
@@ -134,7 +143,7 @@ async function run() {
             const type = req.query.type;
             const duration = req.query.duration;
             const searchStr = req.query.searchStr;
-            
+
             let filter = { isApproved: true };
             if (category !== "all") {
                 filter.category_id = category;
@@ -161,14 +170,16 @@ async function run() {
 
             if (searchStr !== "") {
                 searchResult = result.filter((job) => {
-                    if(job.title
-                        .toLocaleLowerCase()
-                        .includes(searchStr.toLocaleLowerCase()) ||
+                    if (
+                        job.title
+                            .toLocaleLowerCase()
+                            .includes(searchStr.toLocaleLowerCase()) ||
                         job.category_title
                             .toLocaleLowerCase()
-                            .includes(searchStr.toLocaleLowerCase())){
-                                return job;
-                            }
+                            .includes(searchStr.toLocaleLowerCase())
+                    ) {
+                        return job;
+                    }
                 });
                 res.send({ status: true, data: searchResult });
                 return;
