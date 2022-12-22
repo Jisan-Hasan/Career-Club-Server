@@ -36,6 +36,9 @@ async function run() {
             .db("career-club")
             .collection("payments");
         const jobCollection = client.db("career-club").collection("jobs");
+        const applicationCollection = client
+            .db("career-club")
+            .collection("applications");
 
         /* ----------------------GET API----------------------------- */
 
@@ -232,6 +235,13 @@ async function run() {
             const job = req.body;
             const result = await jobCollection.insertOne(job);
             res.send({ status: true, data: result });
+        });
+
+        // save job application on db
+        app.post("/application", async (req, res) => {
+            const application = req.body;
+            const result = await applicationCollection.insertOne(application);
+            res.send({status: true, data: result});
         });
 
         /* ----------------------PUT API----------------------------- */
