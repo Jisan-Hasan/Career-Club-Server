@@ -190,6 +190,20 @@ async function run() {
             res.send({ status: true, data: result });
         });
 
+        // check for already applied
+        app.get("/application", async (req, res) => {
+            const seeker_email = req.query.email;
+            const job_id = req.query.jobId;
+            // console.log(seeker_email, job_id);
+            const filter = { seeker_email: seeker_email, job_id: job_id };
+            const result = await applicationCollection.findOne(filter);
+            if(result){
+                res.send({status: true})
+            } else{
+                res.send({status: false})
+            }
+        });
+
         /* ----------------------POST API----------------------------- */
 
         // stripe payment
@@ -241,7 +255,7 @@ async function run() {
         app.post("/application", async (req, res) => {
             const application = req.body;
             const result = await applicationCollection.insertOne(application);
-            res.send({status: true, data: result});
+            res.send({ status: true, data: result });
         });
 
         /* ----------------------PUT API----------------------------- */
