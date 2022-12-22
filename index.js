@@ -412,6 +412,25 @@ async function run() {
             }
         });
 
+        // add or update user skills set
+        app.patch("/addSkill/:id", async (req, res) => {
+            const id = req.params.id;
+            const skills = req.body;
+            const filter = { _id: ObjectId(id) };
+            const options = { upsert: false };
+            const doc = { $set: skills };
+            const result = await usersCollection.updateOne(
+                filter,
+                doc,
+                options
+            );
+            if (result.modifiedCount) {
+                res.send({ status: true });
+            } else {
+                res.send({ status: false });
+            }
+        });
+
         /* ----------------------DELETE API----------------------------- */
 
         // delete package by id
