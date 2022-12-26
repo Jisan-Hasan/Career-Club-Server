@@ -194,14 +194,39 @@ async function run() {
         app.get("/application", async (req, res) => {
             const seeker_email = req.query.email;
             const job_id = req.query.jobId;
-            // console.log(seeker_email, job_id);
             const filter = { seeker_email: seeker_email, job_id: job_id };
             const result = await applicationCollection.findOne(filter);
-            if(result){
-                res.send({status: true})
-            } else{
-                res.send({status: false})
+            if (result) {
+                res.send({ status: true });
+            } else {
+                res.send({ status: false });
             }
+        });
+
+        // get all application for a particular job
+        app.get("/application/:id", async (req, res) => {
+            const id = req.params.id;
+            const uni = req.query.uni;
+            
+            let filter = { job_id: id  };
+
+            const result = await applicationCollection.find(filter).toArray();
+
+            if (uni !== "") {
+                searchResult = result.filter((application) => {
+                    if (
+                        application.university
+                            .toLocaleLowerCase()
+                            .includes(uni.toLocaleLowerCase())
+                    ) {
+                        return application;
+                    }
+                });
+                res.send({ status: true, data: searchResult });
+                return;
+            }
+
+            res.send({ status: true, data: result });
         });
 
         /* ----------------------POST API----------------------------- */
