@@ -42,6 +42,11 @@ async function run() {
 
         /* ----------------------GET API----------------------------- */
 
+        // get all user
+        app.get("/users", async (req, res) => {
+            const result = await usersCollection.find({}).toArray();
+            res.send({ status: true, data: result });
+        });
         // get user by email
         app.get("/user/:email", async (req, res) => {
             const email = req.params.email;
@@ -115,6 +120,12 @@ async function run() {
             const email = req.params.email;
             const filter = { employer_email: email };
             const result = await jobCollection.find(filter).toArray();
+            res.send({ status: true, data: result });
+        });
+
+        // get all jobs
+        app.get("/jobs", async (req, res) => {
+            const result = await jobCollection.find({}).toArray();
             res.send({ status: true, data: result });
         });
 
@@ -207,8 +218,8 @@ async function run() {
         app.get("/application/:id", async (req, res) => {
             const id = req.params.id;
             const uni = req.query.uni;
-            
-            let filter = { job_id: id  };
+
+            let filter = { job_id: id };
 
             const result = await applicationCollection.find(filter).toArray();
 
