@@ -124,7 +124,7 @@ async function run() {
         });
 
         // get all jobs
-        app.get("/jobs", async (req, res) => {
+        app.get("/allJobs", async (req, res) => {
             const result = await jobCollection.find({}).toArray();
             res.send({ status: true, data: result });
         });
@@ -201,6 +201,12 @@ async function run() {
             res.send({ status: true, data: result });
         });
 
+        // get all application count
+        app.get("/applicationsCount", async (req, res) => {
+            const result = await applicationCollection.find({}).toArray();
+            res.send({ status: true, data: result.length });
+        });
+
         // check for already applied
         app.get("/application", async (req, res) => {
             const seeker_email = req.query.email;
@@ -237,6 +243,12 @@ async function run() {
                 return;
             }
 
+            res.send({ status: true, data: result });
+        });
+
+        // get all payment
+        app.get("/allPayments", async (req, res) => {
+            const result = await paymentCollection.find({}).toArray();
             res.send({ status: true, data: result });
         });
 
